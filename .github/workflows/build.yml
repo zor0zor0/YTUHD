@@ -31,15 +31,10 @@ jobs:
           git clone https://github.com/PoomSmart/YouTubeHeader.git $HOME/theos/include/YouTubeHeader
           git clone https://github.com/PoomSmart/PSHeader.git $HOME/theos/include/PSHeader
 
-      - name: Init vendor submodules
+      - name: Init all submodules
         run: |
-          git submodule update --init --recursive
-
-      - name: Fetch vendor libs
-        run: |
-          mkdir -p vendor
-          git clone https://github.com/PoomSmart/libvpx_ios.git vendor/libvpx_ios
-          git clone https://github.com/PoomSmart/dav1d_ios.git vendor/dav1d_ios
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote
 
       - name: Build package
         run: |
