@@ -13,31 +13,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install packages
-        run: |
-          sudo apt update
-          sudo apt install -y make perl clang zip unzip git curl xz-utils
-
-      - name: Install Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
-
-      - name: Install SDK
-        run: |
-          mkdir -p $HOME/theos/sdks
-          git clone https://github.com/theos/sdks.git /tmp/sdks
-          cp -r /tmp/sdks/iPhoneOS16.5.sdk $HOME/theos/sdks/
-
-      - name: Install Toolchain
-        run: |
-          mkdir -p $HOME/theos/toolchain/linux/iphone
-          curl -L https://github.com/theos/toolchain/releases/latest/download/linux-ios-arm64-clang-toolchain.tar.xz -o /tmp/toolchain.tar.xz
-          tar -xf /tmp/toolchain.tar.xz -C $HOME/theos/toolchain/linux/iphone
+      - name: Setup Theos
+        uses: Randomblock1/theos-action@v1
 
       - name: Build package
         run: |
-          export THEOS=$HOME/theos
+          export THEOS=/home/runner/theos
           make package FINALPACKAGE=1
 
       - name: Upload result
