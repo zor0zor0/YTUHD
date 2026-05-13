@@ -1,0 +1,33 @@
+name: Build YTUHD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install packages
+        run: |
+          sudo apt update
+          sudo apt install -y make perl clang zip unzip git curl
+
+      - name: Install Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+
+      - name: Build package
+        run: |
+          export THEOS=$HOME/theos
+          make package FINALPACKAGE=1
+
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytuhd-deb
+          path: packages/*.deb
